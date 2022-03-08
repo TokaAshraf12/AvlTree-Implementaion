@@ -30,7 +30,11 @@ public class main {
 					System.out.println("Enter the element that you want to delete : ");
 					int itemdeleted=input.nextInt();
 					nodeinsert.root=nodedelete.Deletion( nodeinsert.root, itemdeleted);
-					System.out.println("element deleted is done..");
+					if(nodeinsert.root != null) {
+						System.out.println("element deleted is done..");
+					}else {
+						System.out.println("Not Found");
+					}
 					break;
 				case"search":
 					System.out.println("Enter the element that you want to search for : ");
