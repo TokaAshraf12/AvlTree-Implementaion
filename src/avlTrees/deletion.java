@@ -12,8 +12,14 @@ public class deletion {
 			
 			if(elem < no.element) {
 				no.left=Deletion(no.left,elem);
+				if(no.left ==null) {
+					return no.left;
+				}
 			}else if(elem > no.element) {
 				no.right=Deletion(no.right,elem);
+				if(no.right ==null) {
+					return no.right;
+				}
 			}else {
 				////if the deleted element is the root
 				if(no.right==null || no.left==null) { //if the root lost one of its children or both
