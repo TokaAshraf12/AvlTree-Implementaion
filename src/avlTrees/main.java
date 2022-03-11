@@ -1,65 +1,85 @@
 package avlTrees;
-import java.util.*;
 
-public class main {
-	public static void main(String[] args) {
-		String operation;
-		rotations_height_print N=new rotations_height_print();
-		insertion nodeinsert=new insertion();
-		deletion  nodedelete=new deletion();
-		
-		Scanner input=new Scanner(System.in);
-		boolean temp=false;
-		while(!temp) {
-			System.out.println("Enter your desired operation: (insert - delete - height - print) or (exit) to end the program: ");
-			 operation=input.next(); 
-				switch(operation) {
-				case "insert":
-					System.out.println("Enter the element: ");
-					int item=input.nextInt();
-					nodeinsert.root=nodeinsert.Insertion(nodeinsert.root,item);
-					
-					break;
-				case "height":
-					System.out.println(N.Height(nodeinsert.root));
-					break; 
-				case "print":
-				  N.printAvlTree( nodeinsert.root,  N.Height(nodeinsert.root));
-				  break;
-				case "delete":
-					System.out.println("Enter the element that you want to delete : ");
-					int itemdeleted=input.nextInt();
-					nodeinsert.root=nodedelete.Deletion( nodeinsert.root, itemdeleted);
-					if(nodeinsert.root != null) {
-						System.out.println("element deleted is done..");
+public class deletion {
+	node root;
+	rotations_height_print N2=new rotations_height_print();
+	 
+//Function Of Deletion..
+	 node Deletion(node no,int elem) {
+			if(no == null) {
+				return no; //root= null(already empty tree)
+			}
+			if(elem < no.element) {
+				no.left=Deletion(no.left,elem);
+			
+			}else if(elem > no.element) {
+				no.right=Deletion(no.right,elem);
+				
+			}else {
+				////if the deleted element is the root
+				if(no.right==null || no.left==null) { //if the root lost one of its children or both
+					node flag=null;
+					if(no.right==flag) {
+						flag=no.left;
+					}else{
+						flag=no.right;
+					}
+					if(flag==null) { //has no children
+						flag=no;
+						no=null;
 					}else {
-						System.out.println("Not Found");
+						no=flag;
 					}
-					break;
-				case"search":
-					System.out.println("Enter the element that you want to search for : ");
-					int itemsearch=input.nextInt();
-					N.root=N.search(nodeinsert.root,itemsearch);
-					if(N.root!=null) {
-						System.out.println(""+N.root.element);
-					}
-					break;
-				case"exit":
-					System.exit(0);
-//					temp=true;
-//					break;
-					
-			    default:
-			    	System.out.println("It IS Not Available. Please Enter The Right Operation: ");
-			    	break;
-					
+				}else { //if both children of root are here..
+					//to get the minimum children of the root..
+						node minimum=no.right; 
+						node m=minimum;
+						while(minimum!=null) { //case that the right child of the root has children.
+							minimum=minimum.left;
+							if(minimum!=null) {
+								no.element=minimum.element;
+								
+							}else {
+								no.element=m.element;
+							}
+							no.right=Deletion(no.right,no.element);
+							
+						}
+				
 				}
-		
+				
+			}
 			
+			if(no==null) {
+				return no;
+			}
+			
+			no.height=N2.MaxHeight(N2.Height(no.left),N2.Height(no.right))+1;
+			
+			int BF=N2.BalanceFactor(no);
+			if(BF > 1) {
+				int BFleft=N2.BalanceFactor(no.left);
+				if(BFleft >0 ) {
+					return N2.RightRotation(no); //left-left case
+				}else if(BFleft <0) { ///left-right case
+					no.left=N2.LeftRotation(no.left);
+					return N2.RightRotation(no);
+				}else {
+					return N2.RightRotation(no);  //consider it left-left case
+				}
+			}else if(BF <-1) {
+				int BFright=N2.BalanceFactor(no.right);
+				if(BFright > 0) {
+					no.right=N2.RightRotation(no.right);
+					return N2.LeftRotation(no);
+				}else if(BFright <0) {
+					return N2.LeftRotation(no);
+				}else {
+					return N2.LeftRotation(no);
+				}
+			}
+			return no;
 		}
-		
-			
-		
-	}
-
+	
+  
 }
